@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WB & Ozon Monitor</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #F2F2F7; padding: 20px; color: #1C1C1E; }
+        .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .value { font-size: 24px; font-weight: bold; }
+        .alert { color: #FF3B30; }
+    </style>
+</head>
+<body>
+<h1>Монитор Магазина</h1>
+<div class="card">
+    <h3>Выручка</h3>
+    <div class="value" id="revenue">Загрузка...</div>
+</div>
+<div class="card">
+    <h3>Штрафы и Габариты</h3>
+    <div class="alert" id="alert-text">Проверка...</div>
+</div>
+<script>
+    async function updateData() {
+        try {
+            const res = await fetch('/api/summary');
+            const data = await res.json();
+            document.getElementById('revenue').innerText = data.revenue.toLocaleString() + ' ₽';
+            document.getElementById('alert-text').innerText = data.ozon_penalty_alert ? 
+                'Внимание: Проблемы на Ozon' : 'Все в норме';
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    updateData();
+</script>
+</body>
+</html>
